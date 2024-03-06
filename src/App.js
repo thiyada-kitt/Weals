@@ -5,6 +5,7 @@ function App() {
   const [showContent, setShowContent] = useState(true);
   const [opacity, setOpacity] = useState(0);
   const [currentPage, setCurrentPage] = useState('NewPage1');
+  const [countdown, setCountdown] = useState({ hours: 2, minutes: 20, seconds: 0 });
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -24,6 +25,37 @@ function App() {
 
     return () => clearInterval(interval);
   }, [showContent]);
+
+  useEffect(() => {
+    if (currentPage === 'NewPage2') {
+      const endTime = new Date();
+      endTime.setHours(24, 0, 0, 0); // Set end time to 24:00:00
+      const now = new Date();
+      const timeDiff = endTime.getTime() - now.getTime();
+
+      if (timeDiff > 0) {
+        const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+        setCountdown({ hours, minutes, seconds });
+
+        const countdownInterval = setInterval(() => {
+          const newTimeDiff = endTime.getTime() - new Date().getTime();
+          if (newTimeDiff > 0) {
+            const newHours = Math.floor((newTimeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const newMinutes = Math.floor((newTimeDiff % (1000 * 60 * 60)) / (1000 * 60));
+            const newSeconds = Math.floor((newTimeDiff % (1000 * 60)) / 1000);
+            setCountdown({ hours: newHours, minutes: newMinutes, seconds: newSeconds });
+          } else {
+            clearInterval(countdownInterval);
+            setCountdown({ hours: 0, minutes: 0, seconds: 0 });
+          }
+        }, 1000);
+
+        return () => clearInterval(countdownInterval);
+      }
+    }
+  }, [currentPage]);
 
   const handleButtonClick = () => {
     setCurrentPage('NewPage2');
@@ -51,9 +83,15 @@ function App() {
         </div>
       )}
 
+      {/* เพิ่มเงื่อนไขในการแสดงหน้า NewPage2 */}
       {currentPage === 'NewPage2' && (
         <div className="NewPage2">
-          <p>สุขสันต์วันครบรอบสองเดือน</p>
+          <p>Happy birthday my baby</p>
+          <p>0.2 m with u ♡</p>
+          <p>{`${countdown.hours.toString().padStart(2, '0')}:${countdown.minutes.toString().padStart(2, '0')}:${countdown.seconds.toString().padStart(2, '0')}`}</p>
+          {/* photo slide*/}
+          <p>ขอบคุณที่อยู่เป็นความสุขให้เค้าในทุกๆวัน เค้ารักเธอนะคะคนดี</p>
+
         </div>
       )}
     </div>
