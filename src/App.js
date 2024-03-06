@@ -3,6 +3,7 @@ import './App.css';
 
 function App() {
   const [showContent, setShowContent] = useState(true);
+  const [opacity, setOpacity] = useState(0);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -11,6 +12,17 @@ function App() {
 
     return () => clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    let interval;
+    if (!showContent) {
+      interval = setInterval(() => {
+        setOpacity(prevOpacity => Math.min(prevOpacity + 0.1, 1));
+      }, 500);
+    }
+
+    return () => clearInterval(interval);
+  }, [showContent]);
 
   return (
     <div className="App">
@@ -22,8 +34,8 @@ function App() {
           </p>
         </header>
       ) : (
-        <div className="NewPage">
-          <p>Happy birthday kub bbe</p>
+        <div className="NewPage1">
+          <p style={{ opacity, transition: 'opacity 1s ease-in-out' }}>🎂 Happy birthday kub bbe 🎉</p>
         </div>
       )}
     </div>
