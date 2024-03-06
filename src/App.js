@@ -1,19 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 
-
 function App() {
   const [showContent, setShowContent] = useState(true);
   const [opacity, setOpacity] = useState(0);
   const [currentPage, setCurrentPage] = useState('NewPage1');
-  const [countdown, setCountdown] = useState({ hours: 2, minutes: 20, seconds: 0 });
+  const [countdown, setCountdown] = useState({ years: 0, days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
   const [isGreetingVisible, setIsGreetingVisible] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowContent(false);
-    }, 3500);
+    }, 2500);
 
     return () => clearTimeout(timer);
   }, []);
@@ -31,32 +30,28 @@ function App() {
 
   useEffect(() => {
     if (currentPage === 'NewPage2') {
-      const endTime = new Date();
-      endTime.setHours(24, 0, 0, 0); // Set end time to 24:00:00
       const now = new Date();
-      const timeDiff = endTime.getTime() - now.getTime();
+      const birthday = new Date(now.getFullYear() - 19, now.getMonth(), now.getDate(), 0, 0, 0); // Set birthday time to 19 years ago
 
-      if (timeDiff > 0) {
-        const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
-        setCountdown({ hours, minutes, seconds });
+      const countdownInterval = setInterval(() => {
+        const newTimeDiff = new Date().getTime() - birthday.getTime(); // Calculate updated time difference
+        let totalDays = Math.floor(newTimeDiff / (1000 * 60 * 60 * 24)) + 1; // Calculate total days passed since birthday and start from 1
+        let days = totalDays % 365; // Calculate remaining days
+        let years = Math.floor(totalDays / 365); // Calculate total years passed
+        let hours = Math.floor((newTimeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)); // Calculate hours passed in current day
+        let minutes = Math.floor((newTimeDiff % (1000 * 60 * 60)) / (1000 * 60)); // Calculate remaining minutes
+        let seconds = Math.floor((newTimeDiff % (1000 * 60)) / 1000); // Calculate remaining seconds
 
-        const countdownInterval = setInterval(() => {
-          const newTimeDiff = endTime.getTime() - new Date().getTime();
-          if (newTimeDiff > 0) {
-            const newHours = Math.floor((newTimeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const newMinutes = Math.floor((newTimeDiff % (1000 * 60 * 60)) / (1000 * 60));
-            const newSeconds = Math.floor((newTimeDiff % (1000 * 60)) / 1000);
-            setCountdown({ hours: newHours, minutes: newMinutes, seconds: newSeconds });
-          } else {
-            clearInterval(countdownInterval);
-            setCountdown({ hours: 0, minutes: 0, seconds: 0 });
-          }
-        }, 200);
+        // Adjust years and increment days when it's a new year
+        if (hours === 0 && minutes === 0 && seconds === 0) {
+          years++;
+          days = 1;
+        }
 
-        return () => clearInterval(countdownInterval);
-      }
+        setCountdown({ years, days, hours, minutes, seconds }); // Update time state with new values
+      }, 1000);
+
+      return () => clearInterval(countdownInterval); // Cleanup interval on component unmount
     }
   }, [currentPage]);
 
@@ -89,7 +84,7 @@ function App() {
         <div className={currentPage} style={{ display: 'flex', flexDirection: 'column' }}>
           {currentPage === 'NewPage1' && (
             <>
-              <img style={{ opacity: opacity, transition: 'opacity 1s ease-in-out', width: '200px', marginRight: '10px', verticalAlign: 'middle' }} src="wealsproto.jpg" alt="my cutie" />
+              <img style={{ opacity, transition: 'opacity 1s ease-in-out', width: '200px', marginRight: '10px', verticalAlign: 'middle' }} src="wealsproto.jpg" alt="my cutie" />
               <p style={{ opacity, transition: 'opacity 1s ease-in-out' }}>🎂 Happy birthday kub bbe 🎉</p>
               <div style={{ opacity, transition: 'opacity 1s ease-in-out', fontWeight: 'bold' }}>7 March 2024</div>
               <br />
@@ -105,10 +100,16 @@ function App() {
           <p style={{ fontWeight: 'bold', fontSize: '25px', color: '#FF00FF', textShadow: '2px 2px 2px rgba(0, 0, 0, 0.3)', marginTop: '60px'} }>Happy birthday my baby</p>
           <p style={{ fontWeight: 'bold', fontSize: '20px'} }>0.2 m with u ♡</p>
           <p style={{
-            border: '2px solid lightgrey',
-            padding: '5px 10px',
-            borderRadius: '10px', fontWeight: 'bold' , display: 'inline-block'
-          }}>{`${countdown.hours.toString().padStart(2, '0')}:${countdown.minutes.toString().padStart(2, '0')}:${countdown.seconds.toString().padStart(2, '0')}`}</p>
+  border: '2px solid lightgrey',
+  padding: '5px 10px',
+  borderRadius: '10px',
+  fontWeight: 'bold',
+  display: 'inline-block'
+}}>
+  {`แฟนเค้า ${countdown.years} ขวบแล้ว!`}
+  <br />
+  {`${countdown.hours.toString().padStart(2, '0')}:${countdown.minutes.toString().padStart(2, '0')}:${countdown.seconds.toString().padStart(2, '0')}`}
+</p>
           <br />
           <button className="button2" onClick={handleGreetingClick}>{isGreetingVisible ? 'Click me!' : 'Click me!'} 🎂</button>
           <br />
