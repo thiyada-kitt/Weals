@@ -7,11 +7,8 @@ function App() {
       <header className="App-header">
         <img src= "cat.png" className="App-logo" alt="logo" />
         <p>
-          xxxx
+          Loading love...
         </p>
-        <a>
-          xxxxx
-        </a>
       </header>
     </div>
   );
