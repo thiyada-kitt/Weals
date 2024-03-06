@@ -9,7 +9,7 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+    animation: App-logo-spin infinite 10s linear;
   }
 }
 
@@ -24,9 +24,16 @@
   color: black;
 }
 
-.App-link {
-  color: #61dafb;
+@keyframes bounce {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+  100% { transform: translateY(0); }
 }
+
+.App-header p {
+  animation: bounce 1s infinite;
+}
+
 
 @keyframes App-logo-spin {
   from {
