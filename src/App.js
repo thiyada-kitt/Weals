@@ -6,6 +6,7 @@ function App() {
   const [opacity, setOpacity] = useState(0);
   const [currentPage, setCurrentPage] = useState('NewPage1');
   const [countdown, setCountdown] = useState({ hours: 2, minutes: 20, seconds: 0 });
+  const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -57,6 +58,14 @@ function App() {
     }
   }, [currentPage]);
 
+  useEffect(() => {
+    const photoInterval = setInterval(() => {
+      setCurrentPhotoIndex(prevIndex => (prevIndex + 1) % 3); // Assume there are 3 photos
+    }, 2000); // Change photo every 2 seconds
+
+    return () => clearInterval(photoInterval);
+  }, []);
+
   const handleButtonClick = () => {
     setCurrentPage('NewPage2');
   };
@@ -89,9 +98,13 @@ function App() {
           <p>Happy birthday my baby</p>
           <p>0.2 m with u ♡</p>
           <p>{`${countdown.hours.toString().padStart(2, '0')}:${countdown.minutes.toString().padStart(2, '0')}:${countdown.seconds.toString().padStart(2, '0')}`}</p>
-          {/* photo slide*/}
+          <button>กดตรงนี้เพื่อรับคำอวยพร</button>
           <p>ขอบคุณที่อยู่เป็นความสุขให้เค้าในทุกๆวัน เค้ารักเธอนะคะคนดี</p>
-
+          <p>การที่ได้รู้จักเธอ สำหรับเค้ามันยิ่งกว่าคำว่าโชคดีอีกรู้มั้ย.. :-) </p>
+          {/* <div className="photo-slide">
+            <img src={`photo${currentPhotoIndex}.jpg`} alt={`Photo ${currentPhotoIndex}`} />
+          </div> */}
+          <p>message for u ^^</p>
         </div>
       )}
     </div>
